@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigQuery Release Notes Explorer</title>
+    <meta name="description" content="Browse, search, filter, and share the latest Google Cloud BigQuery updates and release notes.">
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="app-header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="logo-glow"></div>
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                        <line x1="12" y1="22.08" x2="12" y2="12"></line>
+                    </svg>
+                </div>
+                <div>
+                    <h1>BigQuery Release Notes</h1>
+                    <p class="subtitle">Stay updated with Google Cloud BigQuery developments</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span id="sync-time" class="sync-time">Not synced</span>
+                <button id="btn-refresh" class="btn btn-primary" aria-label="Refresh release notes">
+                    <span class="btn-text">Refresh Feed</span>
+                    <span class="spinner" id="refresh-spinner" hidden></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <!-- Dashboard Statistics Panel -->
+        <section class="stats-panel" aria-label="Quick statistics">
+            <div class="stat-card">
+                <span class="stat-label">Total Updates</span>
+                <span id="stat-total" class="stat-value">-</span>
+            </div>
+            <div class="stat-card feature-accent">
+                <span class="stat-label">Features</span>
+                <span id="stat-features" class="stat-value">-</span>
+            </div>
+            <div class="stat-card breaking-accent">
+                <span class="stat-label">Breaking / Changes</span>
+                <span id="stat-breaking" class="stat-value">-</span>
+            </div>
+            <div class="stat-card issues-accent">
+                <span class="stat-label">Issues</span>
+                <span id="stat-issues" class="stat-value">-</span>
+            </div>
+        </section>
+
+        <!-- Search and Filters Panel -->
+        <section class="filters-panel" aria-label="Search and Filter Controls">
+            <div class="search-box">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="search-input" placeholder="Search updates (e.g. Gemini, Arrow, tables)..." aria-label="Search updates">
+                <button id="btn-clear-search" class="btn-clear" aria-label="Clear search" hidden>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="filter-chips" role="radiogroup" aria-label="Filter updates by category">
+                <button class="chip active" data-filter="all" role="radio" aria-checked="true">All Updates</button>
+                <button class="chip" data-filter="Feature" role="radio" aria-checked="false">
+                    <span class="dot dot-feature"></span> Features
+                </button>
+                <button class="chip" data-filter="Breaking" role="radio" aria-checked="false">
+                    <span class="dot dot-breaking"></span> Breaking
+                </button>
+                <button class="chip" data-filter="Change" role="radio" aria-checked="false">
+                    <span class="dot dot-change"></span> Changes
+                </button>
+                <button class="chip" data-filter="Issue" role="radio" aria-checked="false">
+                    <span class="dot dot-issue"></span> Issues
+                </button>
+                <button class="chip" data-filter="Announcement" role="radio" aria-checked="false">
+                    <span class="dot dot-announcement"></span> Announcements
+                </button>
+            </div>
+        </section>
+
+        <!-- Loader Area -->
+        <section id="feed-loader" class="feed-loader" hidden>
+            <div class="loader-pulse"></div>
+            <p>Fetching BigQuery Release Notes...</p>
+        </section>
+
+        <!-- Error Area -->
+        <section id="feed-error" class="feed-error" hidden>
+            <svg class="error-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+            <h2>Failed to load feed</h2>
+            <p id="error-message">An unexpected error occurred while fetching the release notes.</p>
+            <button id="btn-retry" class="btn btn-secondary">Retry Now</button>
+        </section>
+
+        <!-- Timeline / Feed Content -->
+        <section id="feed-timeline" class="feed-timeline" aria-live="polite">
+            <!-- Cards will be dynamically injected here -->
+        </section>
+    </main>
+
+    <!-- Dialog for Tweet draft -->
+    <dialog id="tweet-dialog" class="tweet-modal">
+        <div class="modal-content">
+            <header class="modal-header">
+                <h2>Share on X / Twitter</h2>
+                <button id="btn-close-modal" class="btn-close-modal" aria-label="Close modal">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </header>
+            
+            <div class="modal-body">
+                <div class="draft-preview-header">Draft Tweet</div>
+                
+                <!-- Styled character limit box -->
+                <div class="tweet-editor-wrapper">
+                    <textarea id="tweet-textarea" rows="6" aria-label="Draft Tweet text"></textarea>
+                    <div class="tweet-editor-footer">
+                        <span id="char-counter" class="char-counter">0 / 280</span>
+                    </div>
+                </div>
+                
+                <div class="modal-tip">
+                    <svg class="tip-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <span>You can edit the drafted text above before posting it on X.</span>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button id="btn-copy-tweet" class="btn btn-secondary">
+                    <span>Copy Draft</span>
+                </button>
+                <button id="btn-publish-tweet" class="btn btn-primary">
+                    <svg class="x-icon" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
+                    </svg>
+                    <span>Post on X</span>
+                </button>
+            </footer>
+        </div>
+    </dialog>
+
+    <footer class="app-footer">
+        <p>BigQuery Release Notes Explorer &copy; 2026. Made with ❤️ using Flask & Vanilla JS.</p>
+        <p class="feed-src">Source Feed: <a href="https://docs.cloud.google.com/feeds/bigquery-release-notes.xml" target="_blank" rel="noopener noreferrer">Google Cloud Feeds</a></p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
