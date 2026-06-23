@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Theme Selector Switch
     const themeCheckbox = document.getElementById('theme-checkbox');
 
+    // Back to Top Button
+    const btnBackToTop = document.getElementById('btn-back-to-top');
+
     // Fetch and Load Feed
     async function loadFeed(isManualRefresh = false) {
         setLoadingState(true);
@@ -376,6 +379,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.body.classList.remove('light-theme');
                 localStorage.setItem('theme', 'dark');
             }
+        });
+    }
+
+    // Back to Top scroll listener
+    if (btnBackToTop) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                btnBackToTop.classList.add('visible');
+            } else {
+                btnBackToTop.classList.remove('visible');
+            }
+        });
+
+        btnBackToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
         });
     }
 

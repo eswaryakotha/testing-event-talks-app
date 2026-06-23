@@ -944,3 +944,47 @@ input:checked + .slider .sun-icon {
 input:checked + .slider .moon-icon {
     color: var(--text-muted);
 }
+
+/* Back to Top Button */
+.btn-back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    color: #ffffff;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    z-index: 90;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+}
+
+.btn-back-to-top svg {
+    width: 20px;
+    height: 20px;
+}
+
+.btn-back-to-top:hover {
+    background-color: var(--color-primary-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
+}
+
+.btn-back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+body.light-theme .btn-back-to-top {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
