@@ -36,6 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Current Tweet Draft state
     let currentTweetData = null;
 
+    // Theme Selector Switch
+    const themeCheckbox = document.getElementById('theme-checkbox');
+
     // Fetch and Load Feed
     async function loadFeed(isManualRefresh = false) {
         setLoadingState(true);
@@ -356,6 +359,25 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open(url, '_blank');
         closeTweetModal();
     });
+
+    // Theme Switcher Initialization & Handler
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-theme');
+        if (themeCheckbox) themeCheckbox.checked = true;
+    }
+
+    if (themeCheckbox) {
+        themeCheckbox.addEventListener('change', (e) => {
+            if (e.target.checked) {
+                document.body.classList.add('light-theme');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.classList.remove('light-theme');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+    }
 
     // Trigger initial load
     loadFeed();

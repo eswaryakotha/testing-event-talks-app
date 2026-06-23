@@ -792,3 +792,155 @@ dialog[open] {
         justify-content: space-between;
     }
 }
+
+/* Light Theme Variables */
+body.light-theme {
+    --bg-dark: #f8fafc;
+    --bg-surface: #ffffff;
+    --bg-surface-hover: #f1f5f9;
+    --border-color: rgba(15, 23, 42, 0.08);
+    --border-color-focus: rgba(2, 132, 199, 0.4);
+    
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    --bg-feature: rgba(16, 185, 129, 0.08);
+    --bg-breaking: rgba(244, 63, 94, 0.08);
+    --bg-change: rgba(167, 139, 250, 0.08);
+    --bg-issue: rgba(245, 158, 11, 0.08);
+    --bg-announcement: rgba(59, 130, 246, 0.08);
+}
+
+body.light-theme .brand h1 {
+    background: linear-gradient(90deg, #0f172a 0%, #334155 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light-theme .update-card {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .update-card:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+}
+
+body.light-theme .filters-panel {
+    background: rgba(255, 255, 255, 0.8);
+}
+
+body.light-theme .search-box input {
+    background: #ffffff;
+    color: var(--text-primary);
+}
+
+body.light-theme .chip {
+    background: rgba(0, 0, 0, 0.03);
+    color: var(--text-secondary);
+}
+
+body.light-theme .chip:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--text-primary);
+}
+
+body.light-theme .chip.active {
+    background: var(--color-primary);
+    color: #ffffff;
+}
+
+body.light-theme .tweet-editor-wrapper {
+    background: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme .card-body code {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+/* Theme Switcher Styles */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 8px;
+}
+
+.theme-switch {
+    display: inline-block;
+    height: 28px;
+    position: relative;
+    width: 52px;
+}
+
+.theme-switch input {
+    display: none;
+}
+
+.slider {
+    background-color: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--border-color);
+    bottom: 0;
+    cursor: pointer;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 6px;
+}
+
+.slider svg {
+    width: 13px;
+    height: 13px;
+    z-index: 1;
+    transition: color 0.3s ease;
+    pointer-events: none;
+}
+
+.moon-icon {
+    color: #f59e0b; /* Amber moon in dark mode */
+}
+
+.sun-icon {
+    color: var(--text-muted);
+}
+
+.slider:before {
+    background-color: var(--color-primary);
+    bottom: 2px;
+    content: "";
+    height: 22px;
+    left: 2px;
+    position: absolute;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 22px;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+input:checked + .slider .sun-icon {
+    color: #f59e0b; /* Amber sun in light mode */
+}
+
+input:checked + .slider .moon-icon {
+    color: var(--text-muted);
+}
